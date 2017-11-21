@@ -1,6 +1,6 @@
 class BaseConfig:
-    DEBUG=False
-    TESTING=False
+    DEBUG = False
+    TESTING = False
 
 
 class DevConfig(BaseConfig):
