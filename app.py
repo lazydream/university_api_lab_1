@@ -5,11 +5,8 @@ from views.groups_views import groups_views
 from views.students_views import students_views
 from views.teachers_views import teachers_views
 
-# from views import course_views
-
 app = Flask(__name__)
 
-# app.register_blueprint(course_views)
 app.register_blueprint(courses_views)
 app.register_blueprint(departaments_views)
 app.register_blueprint(groups_views)
