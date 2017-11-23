@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 
 from db_utils import query_db
 
-courses_views = Blueprint('course_views', __name__)
+courses_views = Blueprint('courses_views', __name__)
 
 
 @courses_views.route('/courses')
