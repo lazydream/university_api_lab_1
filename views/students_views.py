@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from db_utils import query_db, get_db
 from schemas.general import IdListSchema
-from schemas.student import StudentSchema
+from schemas.students import StudentsSchema
 
 students_views = Blueprint('students_views', __name__)
 
@@ -10,18 +10,17 @@ students_views = Blueprint('students_views', __name__)
 @students_views.route('/departaments/<int:departament_id>/groups/<int:group_id>/students',
                       methods=['GET', 'POST', 'DELETE'])
 def students(departament_id, group_id):
-    student_schema = StudentSchema(many=True)
-
+    student_schema = StudentsSchema(many=True)
     if request.method == 'GET':
         query_res = query_db('SELECT s.* FROM students AS s '
                              'JOIN groups AS g ON s.group_id = g.id '
                              'JOIN departaments AS d ON g.departament_id = d.id '
                              'WHERE d.id=? AND g.id=?', (departament_id, group_id))
-        res = student_schema.load(query_res)
-        return jsonify(res.data)
+        res = student_schema.load(query_res).data
+        return jsonify(res)
     elif request.method == 'POST':
         # TODO валидация
-        student_schema = StudentSchema(many=True).loads(request.data)
+        student_schema = StudentsSchema(many=True).loads(request.data)
         if not student_schema.errors:
             student_data = student_schema.data
             res = 'Ok'
@@ -39,7 +38,7 @@ def students(departament_id, group_id):
         # TODO с таким id)
         id_schema = IdListSchema().loads(request.data)
         if not id_schema.errors:
-            question_marks = ['?'] * (len(id_schema.data) + 1)
+            question_marks = ['?'] * (len(id_schema.data['id_list']))
             res = query_db("delete from students where id in ({question_marks});"
                            .format(question_marks=','.join(question_marks)), id_schema.data['id_list'])
             get_db().commit()
@@ -58,7 +57,7 @@ def student(departament_id, group_id, student_id):
                        'WHERE d.id=? AND g.id=? AND s.id=?', (departament_id, group_id, student_id))
         return jsonify(res)
     elif request.method == 'PUT':
-        student_schema = StudentSchema(field_requirement=False).loads(request.data)
+        student_schema = StudentsSchema(field_requirement=False).loads(request.data)
         res = 'Ok'
         if not student_schema.errors:
             for field in student_schema.data:

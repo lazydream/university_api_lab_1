@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
 
-class StudentSchema(Schema):
+class StudentsSchema(Schema):
     # По умолчанию поля name и gender являются обязательными
     field_requirement = True
 
@@ -9,7 +9,7 @@ class StudentSchema(Schema):
         field_requirement = kwargs.get('field_requirement')
         if field_requirement:
             self.field_requirement = field_requirement
-        super(StudentSchema, self).__init__(**kwargs)
+        super(StudentsSchema, self).__init__(**kwargs)
 
     birth_date = fields.Str()
     name = fields.Str(required=field_requirement)

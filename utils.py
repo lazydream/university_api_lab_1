@@ -16,7 +16,7 @@ def format_departaments(departaments):
     return departaments
 
 
-def format_teachers(teachers):
+def format_teachers(teachers, teachers_courses):
     res = []
     ids = []
     for teacher in teachers:
