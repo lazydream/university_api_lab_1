@@ -17,24 +17,14 @@ def format_departaments(departaments):
 
 
 def format_teachers(teachers, teachers_courses):
-    res = []
-    ids = []
-    for teacher in teachers:
-        if teacher['id'] not in ids:
-            ids.append(teacher['id'])
-            teacher['links'] = [
-                {
-                    'rel': 'course',
-                    'href': url_for('courses_views.course', course_id=teacher['course_id'])
-                }
-            ]
-            res.append(teacher)
-        else:
-            tchr = next((tchr for tchr in res if tchr['id'] == teacher['id']))
-            tchr['links'].append({
+    for rel in teachers_courses:
+        teacher = next((tchr for tchr in teachers if rel['id'] == tchr['id']))
+        teacher['links'] = [
+            {
                 'rel': 'course',
-                'href': url_for('courses_views.course', course_id=teacher['course_id'])
-            })
+                'href': url_for('courses_views.course', course_id=rel['course_id'])
+            }
+        ]
     return teachers
 
 

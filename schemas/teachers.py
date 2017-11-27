@@ -7,5 +7,5 @@ class TeachersSchema(Schema):
     gender = fields.Str(required=True)
     birth_date = fields.Str()
     phone_number = fields.Str()
-    departament_id = fields.Int(required=True)
+    departament_id = fields.Int()
     course_id = fields.Int()
