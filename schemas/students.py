@@ -17,3 +17,6 @@ class StudentsSchema(Schema):
     group_id = fields.Int()
     id = fields.Int()
     phone_number = fields.Str()
+    course = fields.Int(allow_none=True)
+    group_name = fields.Str()
+    departament_name = fields.Str()

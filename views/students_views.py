@@ -1,8 +1,11 @@
+from datetime import datetime
+
 from flask import Blueprint, jsonify, request
 
 from db_utils import query_db, get_db
 from schemas.general import IdListSchema
 from schemas.students import StudentsSchema
+from utils import calculate_age
 
 students_views = Blueprint('students_views', __name__)
 
@@ -47,6 +50,21 @@ def students(departament_id, group_id):
         return jsonify(res)
 
 
+@students_views.route('/departaments/<int:departament_id>/groups/<int:group_id>/students/view')
+def students_view(departament_id, group_id):
+    students_data = query_db('select s.id, s.name, g.name as group_name, g.course, '
+                             's.gender, s.birth_date, s.phone_number, d.name as departament_name '
+                             'from students as s '
+                             'join groups as g on s.group_id = g.id '
+                             'join departaments as d on d.id = g.departament_id where d.id=? and g.id=? ',
+                             (departament_id, group_id))
+    students_sch = StudentsSchema(many=True).load(students_data).data
+    for s in students_sch:
+        birth_date = datetime.strptime(s.pop('birth_date'), '%Y-%m-%d')
+        s['age'] = calculate_age(birth_date)
+        return jsonify(students_sch)
+
+
 @students_views.route('/departaments/<int:departament_id>/groups/<int:group_id>/students/<int:student_id>',
                       methods=['GET', 'PUT', 'DELETE'])
 def student(departament_id, group_id, student_id):
@@ -68,6 +86,6 @@ def student(departament_id, group_id, student_id):
             res = student_schema.errors
         return jsonify(res)
     elif request.method == 'DELETE':
-        res = query_db("DELETE FROM students WHERE id=?;", (student_id,))
+        query_db("DELETE FROM students WHERE id=?;", (student_id,))
         get_db().commit()
         return jsonify('Ok')

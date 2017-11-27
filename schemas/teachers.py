@@ -9,3 +9,7 @@ class TeachersSchema(Schema):
     phone_number = fields.Str()
     departament_id = fields.Int()
     course_id = fields.Int()
+
+    # Юзаж в представлении тичера
+    departament_name = fields.Str()
+    institute = fields.Str()

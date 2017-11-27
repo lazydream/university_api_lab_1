@@ -1,10 +1,12 @@
+from datetime import datetime
+
 from flask import Blueprint, jsonify, request
 
 from db_utils import query_db, get_db
 from schemas.courses import CoursesSchema
 from schemas.general import IdListSchema
 from schemas.teachers import TeachersSchema
-from utils import format_teachers
+from utils import format_teachers, calculate_age
 
 teachers_views = Blueprint('teachers_views', __name__)
 
@@ -47,6 +49,22 @@ def teachers(departament_id):
         else:
             res = id_sch.errors
     return jsonify(res)
+
+
+@teachers_views.route('/departaments/<int:departament_id>/teachers/view')
+def teachers_view(departament_id):
+    teachers_data = query_db('select t.id, d.name as departament_name, '
+                             'd.institute, t.name, t.gender, t.birth_date, '
+                             't.phone_number from teachers as t '
+                             'join departaments as d on t.departament_id = d.id '
+                             'where t.departament_id=?',
+                             (departament_id,))
+
+    teachers_sch = TeachersSchema(many=True).load(teachers_data).data
+    for t in teachers_sch:
+        birth_date = datetime.strptime(t.pop('birth_date'), '%Y-%m-%d')
+        t['age'] = calculate_age(birth_date)
+    return jsonify(teachers_sch)
 
 
 @teachers_views.route('/departaments/<int:departament_id>/teachers/<int:teacher_id>',
