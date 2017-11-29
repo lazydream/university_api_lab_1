@@ -6,3 +6,14 @@ class BaseConfig:
 class DevConfig(BaseConfig):
     DEBUG = True
     TESTING = True
+
+
+STUDENT_REPORT = 1
+DEPARTAMENT_REPORT = 2
+INSTITUTE_REPORT = 3
+
+REPORT_TYPES = (
+    STUDENT_REPORT,
+    DEPARTAMENT_REPORT,
+    INSTITUTE_REPORT
+)

@@ -8,3 +8,8 @@ class CoursesSchema(Schema):
     group_id = fields.Int()
     semester = fields.Int()
     duration = fields.Int()
+    group_name = fields.Str()
+    departament_name = fields.Str()
+    institute = fields.Str()
+    course = fields.Int(allow_none=True)
+    teacher_name = fields.Str()

@@ -6,6 +6,8 @@ from db_utils import query_db, get_db
 from schemas.general import IdListSchema
 from schemas.students import StudentsSchema
 from utils import calculate_age
+from report_writer import ReportWriter
+from app_config import STUDENT_REPORT
 
 students_views = Blueprint('students_views', __name__)
 
@@ -89,3 +91,25 @@ def student(departament_id, group_id, student_id):
         query_db("DELETE FROM students WHERE id=?;", (student_id,))
         get_db().commit()
         return jsonify('Ok')
+
+
+@students_views.route('/departaments/<int:departament_id>/groups/<int:group_id>'
+                      '/students/<int:student_id>/report',
+                      methods=['GET', 'PUT', 'DELETE'])
+def student_report_one(departament_id, group_id, student_id):
+    student_courses_data = query_db('select s.name, g.name as group_name, '
+                                    'c.name as course_name, t.name as teacher_name, '
+                                    'c.duration as duration '
+                                    'from students as s '
+                                    'join groups as g on s.group_id = g.id '
+                                    'join course as c on g.id = c.group_id '
+                                    'join teachers as t on c.teacher_id = t.id '
+                                    'join departaments as d on g.departament_id = d.id '
+                                    'where d.id=? and g.id=? and s.id=?',
+                                    (departament_id, group_id, student_id))
+    print(student_courses_data)
+    if len(student_courses_data) > 0:
+        ReportWriter(report_type=STUDENT_REPORT).make_report({'headings': list(student_courses_data[0].keys()),
+                                                              'report_data': student_courses_data})
+    return jsonify('Ok')
+
