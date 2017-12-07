@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import xlsxwriter
 from app_config import REPORT_TYPES, STUDENT_REPORT, DEPARTAMENT_REPORT, INSTITUTE_REPORT

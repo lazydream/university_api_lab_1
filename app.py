@@ -1,17 +1,34 @@
-from flask import Flask, g
+import os
+from flask import Flask, g, render_template
 from views.courses_views import courses_views
 from views.departaments_views import departaments_views
 from views.groups_views import groups_views
 from views.students_views import students_views
 from views.teachers_views import teachers_views
 
-app = Flask(__name__)
+
+template_dir = os.path.dirname(__file__)
+template_dir = os.path.join(template_dir, 'client/public')
+print(template_dir)
+
+app = Flask(__name__, template_folder=template_dir)
 
 app.register_blueprint(courses_views)
 app.register_blueprint(departaments_views)
 app.register_blueprint(groups_views)
 app.register_blueprint(students_views)
 app.register_blueprint(teachers_views)
+
+
+@app.route('/')
+def render_page():
+    return render_template('index.html')
+
+
+@app.errorhandler(404)
+def client__error_handler(error):
+    return render_template('index.html'), 200
+
 
 app.config.from_object('app_config.DevConfig')
 
