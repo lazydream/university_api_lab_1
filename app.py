@@ -13,11 +13,11 @@ print(template_dir)
 
 app = Flask(__name__, template_folder=template_dir)
 
-app.register_blueprint(courses_views)
-app.register_blueprint(departaments_views)
-app.register_blueprint(groups_views)
-app.register_blueprint(students_views)
-app.register_blueprint(teachers_views)
+app.register_blueprint(courses_views, url_prefix='/api')
+app.register_blueprint(departaments_views, url_prefix='/api')
+app.register_blueprint(groups_views, url_prefix='/api')
+app.register_blueprint(students_views, url_prefix='/api')
+app.register_blueprint(teachers_views, url_prefix='/api')
 
 
 @app.route('/')
