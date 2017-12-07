@@ -12,6 +12,7 @@ template_dir = os.path.join(template_dir, 'client/public')
 print(template_dir)
 
 app = Flask(__name__, template_folder=template_dir)
+print(template_dir)
 
 app.register_blueprint(courses_views, url_prefix='/api')
 app.register_blueprint(departaments_views, url_prefix='/api')
