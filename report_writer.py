@@ -23,6 +23,7 @@ class ReportWriter:
 
     def _student_report(self, report_dict):
         current_directory = os.path.curdir
+        print(current_directory)
         os.chdir(os.path.join(os.path.curdir, 'reports'))
 
         name = 'report_{report_type}'.format(report_type=self._report_type)
@@ -41,7 +42,7 @@ class ReportWriter:
                 col += 1
             row += 1
         workbook.close()
-        os.chdir('/home/kazimir/Development/Python/lab_1_flask')
+        os.chdir(current_directory)
 
     def _institute_report(self, report_dict):
         pass
