@@ -67,43 +67,43 @@ def teachers_view(departament_id):
     return jsonify(teachers_sch)
 
 
-@teachers_views.route('/departaments/<int:departament_id>/teachers/<int:teacher_id>',
+@teachers_views.route('/teachers/<int:teacher_id>',
                       methods=['GET', 'PUT', 'DELETE'])
-def teacher(departament_id, teacher_id):
+def teacher(teacher_id):
     res = {}
     if request.method == 'GET':
         courses_rel = query_db('SELECT t.id, c.id AS course_id FROM teachers AS t '
                                'JOIN course AS c ON c.teacher_id = t.id '
-                               'WHERE t.id=? AND t.departament_id=?',
-                               (teacher_id, departament_id))
-        teacher_data = query_db('SELECT * FROM teachers WHERE id=? AND departament_id=?',
-                                (teacher_id, departament_id))
+                               'WHERE t.id=? ',
+                               (teacher_id,))
+        teacher_data = query_db('SELECT * FROM teachers WHERE id=? ',
+                                (teacher_id,))
         res = format_teachers(TeachersSchema(many=True).load(teacher_data).data, courses_rel)
     elif request.method == 'PUT':
         teacher_fields = TeachersSchema().loads(request.data)
         if not teacher_fields.errors:
             for field in teacher_fields.data:
                 query_db('update teachers set {field_name}=? '
-                         'where departament_id=? and id=?'
+                         'where id=?'
                          .format(field_name=field),
-                         (teacher_fields.data[field], departament_id, teacher_id))
+                         (teacher_fields.data[field], teacher_id))
             get_db().commit()
             res = 'Ok'
         else:
             res = teacher_fields.errors
     elif request.method == 'DELETE':
         query_db('DELETE FROM teachers '
-                 'WHERE id=? AND departament_id=?',
-                 (teacher_id, departament_id))
+                 'WHERE id=? ',
+                 (teacher_id,))
         res = 'Ok'
     return jsonify(res)
 
 
-@teachers_views.route('/departaments/<int:departament_id>/teachers/<int:teacher_id>/courses',
+@teachers_views.route('/teachers/<int:teacher_id>/courses',
                       methods=['GET'])
-def teacher_courses(departament_id, teacher_id):
+def teacher_courses(teacher_id):
     courses_data = query_db('SELECT * FROM course AS c '
                             'JOIN teachers AS t ON c.teacher_id = t.id '
                             'JOIN departaments AS d ON t.departament_id = d.id '
-                            'WHERE c.teacher_id=? AND d.id=?', (teacher_id, departament_id))
+                            'WHERE c.teacher_id=? ', (teacher_id,))
     return jsonify(CoursesSchema().load(courses_data))

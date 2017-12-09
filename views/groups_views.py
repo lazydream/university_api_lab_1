@@ -15,16 +15,15 @@ def groups(departament_id):
     res = {}
     if request.method == "GET":
         groups_res = query_db('select * from groups '
-                               'where departament_id={departament_id}'
-                               .format(departament_id=departament_id))
+                              'where departament_id=?', (departament_id,))
         groups_sch = groups_schema.load(groups_res)
         res = format_groups(groups_sch.data)
     elif request.method == "POST":
         groups_data = groups_schema.loads(request.data)
         if not groups_data.errors:
             for new_group in groups_data.data:
-                query_db('insert into groups (name, departament_id) values (?,?)',
-                         (new_group['name'], new_group['departament_id']))
+                query_db('INSERT INTO groups (name, departament_id) VALUES (?,?)',
+                         (new_group['name'], departament_id))
                 res = 'Ok'
             get_db().commit()
         else:
@@ -33,7 +32,7 @@ def groups(departament_id):
         id_schema = IdListSchema().loads(request.data)
         if not id_schema.errors:
             res = 'Ok'
-            question_marks = ['?']*(len(id_schema.data['id_list']))
+            question_marks = ['?'] * (len(id_schema.data['id_list']))
             query_db('delete from groups where id in ({question_marks})'
                      .format(question_marks=','.join(question_marks)), id_schema.data['id_list'])
             get_db().commit()
@@ -42,22 +41,20 @@ def groups(departament_id):
     return jsonify(res)
 
 
-@groups_views.route('/departaments/<int:departament_id>/groups/<int:group_id>',
+@groups_views.route('/groups/<int:group_id>',
                     methods=['GET', 'PUT', 'DELETE'])
-def group(departament_id, group_id):
+def group(group_id):
     if request.method == 'GET':
         group_data = query_db('select * from groups '
-                              'where departament_id={departament_id} '
-                              'and id={group_id}'
-                              .format(departament_id=departament_id, group_id=group_id))
+                              'and id=?', (group_id,))
         res = format_groups(GroupsSchema().load(group_data).data)
     elif request.method == 'PUT':
         group_schema = GroupsSchema().loads(request.data)
         if not group_schema.errors:
             for g in group_schema.data:
-                query_db('update groups set {field_name}=? where id=? and departament_id=?'
+                query_db('update groups set {field_name}=? where id=?'
                          .format(field_name=g),
-                         (group_schema.data[g], group_id, departament_id))
+                         (group_schema.data[g], group_id,))
             get_db().commit()
             res = 'Ok'
         else:
@@ -65,8 +62,8 @@ def group(departament_id, group_id):
     return jsonify(res)
 
 
-@groups_views.route('/departaments/<int:departament_id>/groups/<int:group_id>/courses')
-def group_courses(departament_id, group_id):
+@groups_views.route('groups/<int:group_id>/courses')
+def group_courses(group_id):
     courses = query_db('select * from course '
                        'where group_id={group_id}'
                        .format(group_id=group_id))
