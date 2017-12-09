@@ -41,7 +41,7 @@ class ReportWriter:
                 col += 1
             row += 1
         workbook.close()
-        os.chdir('/home/kazimir/Development/Python/lab_1_flask')
+        os.chdir('..')
 
     def _institute_report(self, report_dict):
         pass
