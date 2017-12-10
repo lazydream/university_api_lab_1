@@ -10,8 +10,6 @@ from views.teachers_views import teachers_views
 root_dir = os.path.dirname(__file__)
 build_dir = os.path.join(root_dir, 'client/build')
 static_dir = os.path.join(root_dir, 'client/build/static')
-js_dir = os.path.join(static_dir, 'js')
-css_dir = os.path.join(static_dir, 'css')
 
 app = Flask(__name__, template_folder=build_dir, static_folder=static_dir)
 
@@ -27,14 +25,9 @@ def render_page():
     return render_template('index.html')
 
 
-@app.route('/static/js/<filename>')
-def static_js(filename):
-    return send_from_directory(js_dir, filename)
-
-
-@app.route('/static/css/<filename>')
-def static_css(filename):
-    return send_from_directory(css_dir, filename)
+@app.route('/static/<filename>')
+def static_files(filename):
+    return send_from_directory(static_dir, filename)
 
 
 @app.route('/favicon.ico')
