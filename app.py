@@ -1,5 +1,5 @@
 import os
-from flask import Flask, g, render_template, send_from_directory
+from flask import Flask, g, render_template, send_from_directory, url_for
 from views.courses_views import courses_views
 from views.departaments_views import departaments_views
 from views.groups_views import groups_views
@@ -23,6 +23,11 @@ app.register_blueprint(teachers_views, url_prefix='/api')
 @app.route('/')
 def render_page():
     return render_template('index.html')
+
+
+@app.route('/static/<filename>')
+def static_files(filename):
+    return send_from_directory(static_dir, filename)
 
 
 @app.route('/favicon.ico')
