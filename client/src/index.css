@@ -2,4 +2,69 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+.app-root {
+  margin: 0;
+  display: flex;
+  color:#333;
+  min-height:90vh;
+}
+
+.app-aside-panel {
+  width: 300px;
+  min-height:100%;
+}
+
+.app-content {
+  width: calc(100% - 300px);
+  min-height:100%;
+  min-width: 400px;
+  padding: 20px;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+}
+.table-header,
+.table-row {
+  display: flex;
+  flex-flow: row nowrap;
+
+}
+.table-header {
+  font-weight:bold;
+}
+.table--students .table-row > div {
+  width:calc(100% / 6);
+}
+.table--students-view .table-row > div {
+  width:calc(100% / 8);
+}
+
+.table-row > div {
+  box-sizing:border-box;
+  text-align:center;
+  padding: 0 10px;
+  line-height:35px;
+  border: 1px solid white;
+  border-bottom-color: black;
+  border-right-color: black;
+}
+.table-header > div {
+  border-color:black;
+  border-right-color: transparent;
+}
+.table-row>div:last-child {
+  border-right-color: black;
+}
+.table-row>div:first-child {
+  border-left-color: black;
+}
+.table-body {
+  display: flex;
+  flex-flow: column nowrap;
 }

@@ -11,18 +11,16 @@ from utils import format_teachers, calculate_age
 teachers_views = Blueprint('teachers_views', __name__)
 
 
-@teachers_views.route('/departaments/<int:departament_id>/teachers',
+@teachers_views.route('/teachers',
                       methods=['GET', 'POST', 'DELETE'])
-def teachers(departament_id):
+def teachers():
     teachers_schema = TeachersSchema(many=True)
     res = {}
     if request.method == 'GET':
         teachers_courses = query_db('SELECT t.id, c.id AS course_id FROM teachers AS t '
-                                    'JOIN course AS c ON c.teacher_id = t.id '
-                                    'WHERE departament_id=?', (departament_id,))
+                                    'JOIN course AS c ON c.teacher_id = t.id ')
 
-        teachers_data = query_db('SELECT * FROM teachers '
-                                 'WHERE departament_id=?', (departament_id,))
+        teachers_data = query_db('SELECT * FROM teachers ')
         teachers_sch = teachers_schema.load(teachers_data)
         res = format_teachers(teachers_sch.data, teachers_courses)
     elif request.method == 'POST':
@@ -33,7 +31,7 @@ def teachers(departament_id):
                          'VALUES (?,?,?,?,?)',
                          (t.get('name'), t.get('gender'),
                           t.get('birth_date'), t.get('phone_number'),
-                          departament_id))
+                          t.get('departament_id')))
             get_db().commit()
             res = 'Ok'
         else:
@@ -51,14 +49,13 @@ def teachers(departament_id):
     return jsonify(res)
 
 
-@teachers_views.route('/departaments/<int:departament_id>/teachers/view')
-def teachers_view(departament_id):
+@teachers_views.route('/teachers/view')
+def teachers_view():
     teachers_data = query_db('select t.id, d.name as departament_name, '
                              'd.institute, t.name, t.gender, t.birth_date, '
                              't.phone_number from teachers as t '
                              'join departaments as d on t.departament_id = d.id '
-                             'where t.departament_id=?',
-                             (departament_id,))
+                             )
 
     teachers_sch = TeachersSchema(many=True).load(teachers_data).data
     for t in teachers_sch:

@@ -97,7 +97,7 @@ def student(student_id):
 
 
 @students_views.route('/students/<int:student_id>/report',
-                      methods=['GET', 'PUT', 'DELETE'])
+                      methods=['GET'])
 def student_report_one(student_id):
     student_courses_data = query_db('select s.name, g.name as group_name, '
                                     'c.name as course_name, t.name as teacher_name, '
