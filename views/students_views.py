@@ -61,9 +61,13 @@ def students_view():
                              'join departaments as d on d.id = g.departament_id')
     students_sch = StudentsSchema(many=True).load(students_data).data
     for s in students_sch:
-        birth_date = datetime.strptime(s.pop('birth_date'), '%Y-%m-%d')
-        s['age'] = calculate_age(birth_date)
-        return jsonify(students_sch)
+        birth_date_string = s.pop('birth_date', None)
+        if birth_date_string:
+            birth_date = datetime.strptime(birth_date_string, '%Y-%m-%d')
+            s['age'] = calculate_age(birth_date)
+        else:
+            s['age'] = None
+    return jsonify(students_sch)
 
 
 @students_views.route('/students/<int:student_id>',

@@ -41,6 +41,7 @@ class ReportWriter:
             row += 1
         workbook.close()
         os.chdir(current_directory)
+
     def _institute_report(self, report_dict):
         pass
 
