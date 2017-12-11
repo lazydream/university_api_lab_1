@@ -61,7 +61,7 @@ class StudentsTable extends Component {
                                     <TableRowColumn>{student.phone_number}</TableRowColumn>
                                     <TableRowColumn>{student.group_id}</TableRowColumn>
                                     <TableRowColumn>
-                                        <RaisedButton href={`/api/students/${student.id}/report`} label="Получить отчет"/>
+                                        <RaisedButton href={`/students/details/${student.id}/`} label="Детали"/>
                                     </TableRowColumn>
                                 </TableRow>
                             )

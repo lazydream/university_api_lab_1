@@ -8,14 +8,13 @@ from utils import format_groups
 groups_views = Blueprint('groups_views', __name__)
 
 
-@groups_views.route('/departaments/<int:departament_id>/groups',
+@groups_views.route('/groups',
                     methods=['GET', 'POST', 'DELETE'])
-def groups(departament_id):
+def groups():
     groups_schema = GroupsSchema(many=True)
     res = {}
     if request.method == "GET":
-        groups_res = query_db('select * from groups '
-                              'where departament_id=?', (departament_id,))
+        groups_res = query_db('select * from groups ')
         groups_sch = groups_schema.load(groups_res)
         res = format_groups(groups_sch.data)
     elif request.method == "POST":
@@ -23,7 +22,7 @@ def groups(departament_id):
         if not groups_data.errors:
             for new_group in groups_data.data:
                 query_db('INSERT INTO groups (name, departament_id) VALUES (?,?)',
-                         (new_group['name'], departament_id))
+                         (new_group['name'], new_group['departament_id']))
                 res = 'Ok'
             get_db().commit()
         else:

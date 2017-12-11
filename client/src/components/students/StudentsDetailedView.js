@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import StudentsCardTemplate from './StudentsCardTemplate'
-
+import RaisedButton from 'material-ui/RaisedButton';
 
 const Field = ({property, value}) => {
     return (
@@ -31,7 +31,6 @@ class StudentsDetailedView extends Component {
 
     render() {
         const {students} = this.state;
-        console.log(students);
         return (
             <StudentsCardTemplate subtitle="Информация о студенте">
                 {students.map(student => {
@@ -46,6 +45,9 @@ class StudentsDetailedView extends Component {
                                     />
                                 ))
                             }
+                            <RaisedButton  primary href={`/api/students/${student.id}/report`} label="Получить отчет"
+                                           style={{marginTop:`10px`}}
+                            />
                         </div>
                     )
                 })}
