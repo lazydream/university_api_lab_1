@@ -3,6 +3,7 @@ import {Switch, Route, Redirect} from 'react-router-dom';
 
 import StudentsSwitch from './students/StudentsSwitch';
 import GroupsSwitch from './groups/GroupsSwitch';
+import TeachersSwitch from './teachers/TeachersSwitch';
 
 const RedirectTo = () => (
     <Redirect to="/students"/>
@@ -13,7 +14,7 @@ const Content = (props) => (
         <Switch>
             <Route path="/" exact component={RedirectTo} />
             <Route path="/students" component={StudentsSwitch}/>
-            <Route path="/teachers" component={StudentsSwitch}/>
+            <Route path="/teachers" component={TeachersSwitch}/>
             <Route path="/departaments" component={StudentsSwitch}/>
             <Route path="/courses" component={StudentsSwitch}/>
             <Route path="/groups" component={GroupsSwitch}/>

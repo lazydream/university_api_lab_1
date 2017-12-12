@@ -8,29 +8,29 @@ import {
     TableRowColumn,
 } from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
-import StudentsCardTemplate from './StudentsCardTemplate'
+import TeachersCardTemplate from './TeachersCardTemplate'
 
-class StudentsTable extends Component {
+class TeachersTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            students: []
+            teachers: []
         }
     }
     componentWillMount() {
-        const url = `/api/students`;
+        const url = `/api/teachers`;
         fetch(url).then(res => res.json())
-            .then(students => {
+            .then(teachers => {
                 this.setState({
-                    students
+                    teachers
                 })
             })
     }
 
     render() {
-        const {students} = this.state;
+        const {teachers} = this.state;
         return (
-            <StudentsCardTemplate subtitle="Таблица">
+            <TeachersCardTemplate subtitle="Таблица">
                 <Table
                     selectable={false}
                 >
@@ -44,34 +44,30 @@ class StudentsTable extends Component {
                             <TableHeaderColumn>Пол</TableHeaderColumn>
                             <TableHeaderColumn>Дата рождения</TableHeaderColumn>
                             <TableHeaderColumn>Телефон</TableHeaderColumn>
-                            <TableHeaderColumn>Код группы</TableHeaderColumn>
-                            <TableHeaderColumn/>
+                            <TableHeaderColumn>Код кафедры</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
                     <TableBody
                         displayRowCheckbox={false}
                     >
-                        {students.map(student => {
+                        {teachers.map(teacher => {
                             return (
                                 <TableRow>
-                                    <TableRowColumn>{student.id}</TableRowColumn>
-                                    <TableRowColumn>{student.name}</TableRowColumn>
-                                    <TableRowColumn>{student.gender}</TableRowColumn>
-                                    <TableRowColumn>{student.birth_date}</TableRowColumn>
-                                    <TableRowColumn>{student.phone_number}</TableRowColumn>
-                                    <TableRowColumn>{student.group_id}</TableRowColumn>
-                                    <TableRowColumn>
-                                        <RaisedButton href={`/students/details/${student.id}/`} label="Детали"/>
-                                    </TableRowColumn>
+                                    <TableRowColumn>{teacher.id}</TableRowColumn>
+                                    <TableRowColumn>{teacher.name}</TableRowColumn>
+                                    <TableRowColumn>{teacher.gender}</TableRowColumn>
+                                    <TableRowColumn>{teacher.birth_date}</TableRowColumn>
+                                    <TableRowColumn>{teacher.phone_number}</TableRowColumn>
+                                    <TableRowColumn>{teacher.departament_id}</TableRowColumn>
                                 </TableRow>
                             )
                         })}
                     </TableBody>
                 </Table>
-            </StudentsCardTemplate>
+            </TeachersCardTemplate>
         )
     }
 }
 
 
-export default StudentsTable;
+export default TeachersTable;

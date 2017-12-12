@@ -68,3 +68,10 @@ body {
   display: flex;
   flex-flow: column nowrap;
 }
+a.active {
+  font-weight:600;
+  color:black;
+}
+a {
+  color:#444;
+}

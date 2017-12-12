@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
-import StudentsCardTemplate from './StudentsCardTemplate'
+import TeachersCardTemplate from './TeachersCardTemplate'
 import RaisedButton from 'material-ui/RaisedButton';
 
 const Input = ({property, label}) => {
@@ -12,20 +12,20 @@ const Input = ({property, label}) => {
     )
 };
 
-class StudentsDetailedView extends Component {
+class TeachersDetailedView extends Component {
     constructor(props) {
         super(props);
         this.state = {
             done: false
         }
     }
-    addStudent = () => {
-        const url = `/api/students`;
+    addTeacher = () => {
+        const url = `/api/teachers`;
         const data = {};
         const inputs = this.refs.form.querySelectorAll('input[name]');
         inputs.forEach(input => {
             data[input.name] = input.value;
-            if (input.name === 'group_id') {
+            if (input.name === 'course_id' || input.name === 'departament_id') {
                 data[input.name] = +input.value;
             }
         });
@@ -38,23 +38,23 @@ class StudentsDetailedView extends Component {
     };
 
     render() {
-        if (this.state.done) return <Redirect to="/students/view" />
+        if (this.state.done) return <Redirect to="/teachers/view" />
         return (
-            <StudentsCardTemplate subtitle="Добавить">
+            <TeachersCardTemplate subtitle="Добавить">
                 <form ref="form">
                     <Input property="name" label="ФИО"/>
                     <Input property="birth_date" label="Дата рождения"/>
                     <Input property="gender" label="Пол"/>
+                    <Input property="departament_id" label="Код кафедры"/>
                     <Input property="phone_number" label="Номер телефона"/>
-                    <Input property="group_id" label="Код группы"/>
-                    <RaisedButton  primary onClick={this.addStudent} label="Добавить"
+                    <RaisedButton  primary onClick={this.addTeacher} label="Добавить"
                                    style={{marginTop:`10px`}}
                     />
                 </form>
-            </StudentsCardTemplate>
+            </TeachersCardTemplate>
         )
     }
 }
 
 
-export default StudentsDetailedView;
+export default TeachersDetailedView;
